@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TTp Canvas</title>
+  <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+<h1>Take Your Picture after 3 seconds !</h1>
+
+<div id="status"></div>
+<button class="camera" onclick="myFunction()">Camera</button>
+
+
+<div>
+    <video id="video" playsinline autoplay></video>
+</div>
+
+<div>
+    <button class="camera" id="snap"  onclick="setTimeout(my,3000);countDown(3,'status');" hidden >Capture</button>
+</div>
+
+<canvas id="canvas" width="640" height="480"></canvas>
+
+
+<script >
+	//fonction pour demarrer la web Cam
+	function myFunction() {
+
+'use strict';
+
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+var snap = document.getElementById("snap");
+const errorMsgElement = document.querySelector('span#errorMsg');
+
+const constraints = {
+  audio: true,
+  video: {
+    width: 640, height: 480
+  }
+};
+
+snap.removeAttribute("hidden");
+
+async function init() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    handleSuccess(stream);
+  } catch (e) {
+    errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
+  }
+}
+
+function handleSuccess(stream) {
+  window.stream = stream;
+  video.srcObject = stream;
+}
+
+init();
+
+  }
+var context = canvas.getContext('2d');
+
+
+
+//fonction qui permet de capturer la photo apres 3 secondes
+function my() {
+	context.drawImage(video, 0, 0, 640, 480);
+  }
+//times out
+/*
+var w;
+function createWindow(){
+//create the popup window.
+
+w=window.open("","",'width=200,height=100');
+
+// put something into the popup window
+try{w.document.write('<html><head></head><body><p id="demo"></p></body> <html>')}catch(err){
+//handle error here
+}
+closeWindow();
+//closes the createWindow() function
+}
+function closeWindow(){ setTimeout("w.close();", 3000);}
+*/
+function countDown(secs,elem) {
+	var element = document.getElementById(elem);
+	element.innerHTML = "Please wait for "+secs+" seconds";
+	if(secs < 1) {
+    clearTimeout(timer);
+    element.innerHTML = '<h2>Countdown Complete!</h2>';
+	}
+	secs--;
+	var timer = setTimeout('countDown('+secs+',"'+elem+'")',1000);
+}
+</script>
+
+</body>
+</html>
